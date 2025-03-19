@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TwisterPanda</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        :root {
+            --color-primary: #FF6B35; /* Naranja principal */
+            --color-secondary: #2D3047; /* Gris oscuro */
+            --color-background: #F8F8F8; /* Fondo claro */
+            --color-text: #333; /* Texto oscuro */
+            --color-white: #FFFFFF; /* Blanco */
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--color-text);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Estilos para la página de presentación */
+        .presentation {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .presentation h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .presentation p {
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+
+        .start-button {
+            padding: 15px 30px;
+            background-color: var(--color-white);
+            color: var(--color-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .start-button:hover {
+            background-color: #FF5500;
+            color: var(--color-white);
+            transform: scale(1.05);
+        }
+
+        /* Estilos para la página principal (oculta inicialmente) */
+        .main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Resto de estilos (sin cambios) */
+        body.dark-mode {
+            --color-background: #2D3047;
+            --color-text: #F8F8F8;
+            --color-white: #1E1E1E;
+        }
+
+        header {
+            background-color: var(--color-white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--color-secondary);
+            transition: transform 0.3s;
+        }
+
+        .menu-icon:hover {
+            transform: rotate(90deg);
+        }
+
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background-color: var(--color-white);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .menu-dropdown a {
+            display: block;
+            padding: 10px;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .menu-dropdown a:hover {
+            background-color: var(--color-background);
+        }
+
+        .content {
+            padding: 100px 20px 40px; /* Ajuste para el header fijo */
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .horizontal-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .section {
+            background-color: var(--color-white);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+            color: var(--color-primary);
+        }
+
+        .section p {
+            font-size: 1em;
+            line-height: 1.6;
+            color: var(--color-text);
+            margin: 0 0 20px 0;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .download-button:hover {
+            background-color: #FF5500;
+            transform: scale(1.05);
+        }
+
+        .additional-section {
+            margin-top: 40px;
+        }
+
+        footer {
+            background-color: var(--color-white);
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            color: var(--color-secondary);
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .footer-buttons a {
+            padding: 10px 20px;
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-buttons a:hover {
+            background-color: #FF5500;
+            transform: scale(1.05);
+        }
+
+        .footer-buttons a img {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .horizontal-container {
+                flex-direction: column;
+            }
+            .section {
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Página de presentación -->
+    <div class="presentation">
+        <h1>Bienvenido a TwisterPanda</h1>
+        <p>Descubre un mundo lleno de diversión y contenido exclusivo para Minecraft. ¡Explora, descarga y disfruta!</p>
+        <a href="#" class="start-button" onclick="showMainContent()">Iniciar</a>
+    </div>
+
+    <!-- Página principal (oculta inicialmente) -->
+    <div class="main-content">
+        <header>
+            <div class="logo">★ TwisterPanda</div>
+            <div class="menu-icon" onclick="toggleMenu()">☰</div>
+            <div class="menu-dropdown" id="menuDropdown">
+                <a href="#" onclick="toggleDarkMode()">🌙 Modo Oscuro</a>
+            </div>
+        </header>
+        <div class="content">
+            <h1 style="color: var(--color-primary); font-size: 2.5em; margin-bottom: 20px;">
+                ¡Descargas Épicas!
+            </h1>
+            <div class="horizontal-container">
+                <!-- Sección Minecraft Deluxe -->
+                <div class="section">
+                    <img src="minecraft.png" alt="Minecraft Deluxe">
+                    <h2>Minecraft Deluxe</h2>
+                    <p>Explora el mundo de Minecraft con características mejoradas y contenido exclusivo.</p>
+                    <a href="https://www.mediafire.com/file/2vhx67be9vj51iy/Minecraft_Deluxe_%252B_Strawberry_Deferred.zip/file" 
+                       class="download-button" 
+                       target="_blank">Descargar</a>
+                </div>
+
+                <!-- Sección Genera tu Tótem -->
+                <div class="section">
+                    <img src="totem.png" alt="Genera tu totem">
+                    <h2>Genera tu Tótem</h2>
+                    <p>Crea tu tótem personalizado al instante con tu skin favorita.</p>
+                    <a href="https://mctotem.asakiyuki.com/" 
+                       class="download-button" 
+                       target="_blank">Generar</a>
+                </div>
+
+                <!-- Sección Hello Kitty -->
+                <div class="section">
+                    <img src="hellokittypaginaweb.jpg" alt="Hello Kitty">
+                    <h2>Hello Kitty & Friends</h2>
+                    <p>Un mundo mágico lleno de diversión y personajes adorables.</p>
+                    <a href="https://www.mediafire.com/file/a6xivemfqjnm961/Hello_Kitty_and_Friends_%2528world_template%2529.mctemplate/file" 
+                       class="download-button" 
+                       target="_blank">Descargar</a>
+                </div>
+            </div>
+
+            <!-- Secciones adicionales: Actions and Stuff, Moana 2 y Bedrock UI -->
+            <div class="horizontal-container additional-section">
+                <!-- Sección Actions and Stuff -->
+                <div class="section">
+                    <img src="Actions_stuff.png" alt="Actions and Stuff">
+                    <h2>Actions and Stuff</h2>
+                    <p>Descubre nuevas acciones y cosas increíbles para tu mundo de Minecraft.</p>
+                    <a href="https://www.mediafire.com/file/ar1uhs590gxo0td/Action+and+stuff.mcpack/file" 
+                       class="download-button" 
+                       target="_blank">Descargar</a>
+                </div>
+
+                <!-- Sección Moana 2 -->
+                <div class="section">
+                    <img src="Moana_2.png" alt="Moana 2">
+                    <h2>Moana 2</h2>
+                    <p>Explora el mundo de Moana en Minecraft con este increíble template.</p>
+                    <a href="https://www.mediafire.com/file/kle41q0l24nao5d/Moana_2_%2528world_template%2529.mctemplate/file" 
+                       class="download-button" 
+                       target="_blank">Descargar</a>
+                </div>
+
+                <!-- Sección Bedrock UI -->
+                <div class="section">
+                    <img src="Bedrock UI.png" alt="Bedrock UI">
+                    <h2>Bedrock UI+</h2>
+                    <p>Una nueva imagen para la UI en Minecraft Bedrock.</p>
+                    <a href="https://mcpedl.com/bedrock-ui-plus-b69-2/" 
+                       class="download-button" 
+                       target="_blank">Descargar</a>
+                </div>
+            </div>
+        </div>
+        <footer>
+            <p>TwisterPanda - Estoy aquí para ayudarte</p>
+            <div class="footer-buttons">
+                <a href="https://www.youtube.com/@twisterpan" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube">
+                    YouTube
+                </a>
+                <a href="https://tiktok.com/@twisterpanda" target="_blank">
+                    <img src="tiktok.png" alt="TikTok">
+                    TikTok
+                </a>
+                <a href="https://www.instagram.com/twisterpanda" target="_blank">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+                    Instagram
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Función para mostrar la página principal con transición
+        function showMainContent() {
+            const presentation = document.querySelector('.presentation');
+            const mainContent = document.querySelector('.main-content');
+
+            presentation.style.opacity = '0';
+            setTimeout(() => {
+                presentation.style.display = 'none';
+                mainContent.style.display = 'block';
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 50);
+            }, 500); // Duración de la transición
+        }
+
+        // Función para mostrar/ocultar el menú desplegable
+        function toggleMenu() {
+            const menu = document.getElementById("menuDropdown");
+            if (menu.style.display === "block") {
+                menu.style.display = "none";
+            } else {
+                menu.style.display = "block";
+            }
+        }
+
+        // Función para activar/desactivar el modo oscuro
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            // Cerrar el menú después de cambiar el modo
+            toggleMenu();
+        }
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            const menu = document.getElementById("menuDropdown");
+            if (!event.target.matches('.menu-icon') && !event.target.matches('.menu-dropdown a')) {
+                if (menu.style.display === "block") {
+                    menu.style.display = "none";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
